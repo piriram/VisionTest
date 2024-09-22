@@ -14,9 +14,10 @@ struct RemoveBackgroundView: View {
             if let inputImage = inputImage {
                 HStack {
                     VStack {
-                        Text("Original Image")
+                        Text("원본")
                             .font(.headline)
-                        Image(uiImage: inputImage)
+                        
+                        Image(uiImage: inputImage)// 이미지피커에서 선택한 사진
                             .resizable()
                             .scaledToFit()
                             .frame(maxHeight: 300)
@@ -24,7 +25,7 @@ struct RemoveBackgroundView: View {
                     
                     if let processedImage = processedImage {
                         VStack {
-                            Text("Background Removed")
+                            Text("누끼")
                                 .font(.headline)
                             Image(uiImage: processedImage)
                                 .resizable()
@@ -42,7 +43,7 @@ struct RemoveBackgroundView: View {
                 }
                 .padding()
             } else {
-                Text("Select an image to remove background")
+                Text("이미지가 아직 선택되지 않았습니다.")
                     .foregroundColor(.gray)
                     .padding()
             }
@@ -52,7 +53,7 @@ struct RemoveBackgroundView: View {
             Button(action: {
                 showingImagePicker = true
             }) {
-                Text("Choose Image")
+                Text("이미지 선택")
                     .padding()
                     .background(Color.blue)
                     .foregroundColor(.white)
@@ -60,7 +61,7 @@ struct RemoveBackgroundView: View {
             }
             .padding()
             .sheet(isPresented: $showingImagePicker, onDismiss: processImage) {
-                ImagePicker(image: $inputImage)
+                RawImagePicker(image: $inputImage)
             }
             
             if isProcessing {
@@ -166,38 +167,5 @@ struct RemoveBackgroundView: View {
         print("Masked Image Extent: \(maskedImage.extent)")
         
         return maskedImage
-    }
-}
-
-struct ImagePicker: UIViewControllerRepresentable {
-    @Binding var image: UIImage?
-    @Environment(\.presentationMode) var presentationMode
-    
-    func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.delegate = context.coordinator
-        return picker
-    }
-    
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-    
-    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        let parent: ImagePicker
-        
-        init(_ parent: ImagePicker) {
-            self.parent = parent
-        }
-        
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let uiImage = info[.originalImage] as? UIImage {
-                parent.image = uiImage
-            }
-            
-            parent.presentationMode.wrappedValue.dismiss()
-        }
     }
 }
