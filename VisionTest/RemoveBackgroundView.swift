@@ -12,7 +12,7 @@ struct RemoveBackgroundView: View {
     var body: some View {
         VStack {
             if let inputImage = inputImage {
-                HStack {
+                VStack {
                     VStack {
                         Text("원본")
                             .font(.headline)
@@ -20,7 +20,7 @@ struct RemoveBackgroundView: View {
                         Image(uiImage: inputImage) // 이미지피커에서 선택한 사진
                             .resizable()
                             .scaledToFit()
-                            .frame(maxHeight: 300)
+                            .frame(maxHeight: 600)
                     }
                     
                     if let processedImage = processedImage {
@@ -30,7 +30,7 @@ struct RemoveBackgroundView: View {
                             Image(uiImage: processedImage)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(maxHeight: 300)
+                                .frame(maxHeight: 600)
                         }
                     } else {
                         VStack {
@@ -110,7 +110,7 @@ struct RemoveBackgroundView: View {
         
         let request = VNGeneratePersonSegmentationRequest()
         request.qualityLevel = .accurate
-        request.outputPixelFormat = kCVPixelFormatType_OneComponent8
+        request.outputPixelFormat = kCVPixelFormatType_OneComponent8 // 얘의 다른 선택지는?
         
 #if targetEnvironment(simulator)
         if #available(iOS 17.0, *) {
@@ -135,7 +135,7 @@ struct RemoveBackgroundView: View {
             print("Segmentation request completed")
             
             if let mask = request.results?.first?.pixelBuffer {
-                print("Mask generated successfully with size: \(CVPixelBufferGetWidth(mask))x\(CVPixelBufferGetHeight(mask))")
+                print("Mask generated successfully with size: \(CVPixelBufferGetWidth(mask))x\(CVPixelBufferGetHeight(mask))") // ??
                 let maskedImage = applyMask(to: ciImage, mask: mask)
                 
                 let context = CIContext()
@@ -162,9 +162,10 @@ struct RemoveBackgroundView: View {
         print("Original Image Extent: \(image.extent)")
         
         // 마스크를 원본 크기로 조정
-        let scale = max(image.extent.width / maskCIImage.extent.width,
-                        image.extent.height / maskCIImage.extent.height)
-        let resizedMask = maskCIImage.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
+//        let scale = max(image.extent.width / maskCIImage.extent.width,
+//                        image.extent.height / maskCIImage.extent.height)
+
+        let resizedMask = maskCIImage.transformed(by: CGAffineTransform(scaleX: image.extent.width / maskCIImage.extent.width, y: image.extent.height / maskCIImage.extent.height))
         
         print("Resized Mask Extent: \(resizedMask.extent)")
         

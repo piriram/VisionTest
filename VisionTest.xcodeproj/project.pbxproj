@@ -11,7 +11,7 @@
 		21BDD32E2C9F04E6000AA618 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21BDD31C2C9F01C9000AA618 /* CoreImage.framework */; };
 		21BDD3302C9F04E8000AA618 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21BDD31E2C9F0442000AA618 /* Vision.framework */; };
 		21BDD3322C9F04E9000AA618 /* VisionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21BDD3202C9F0447000AA618 /* VisionKit.framework */; };
-		21BDD3352C9F07F7000AA618 /* DeepLabV3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 21BDD3342C9F07F7000AA618 /* DeepLabV3.mlmodel */; };
+		21BDD3482CA25E6B000AA618 /* DeepLabV3.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 21BDD3472CA25E6B000AA618 /* DeepLabV3.mlpackage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,7 +20,7 @@
 		21BDD31C2C9F01C9000AA618 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		21BDD31E2C9F0442000AA618 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		21BDD3202C9F0447000AA618 /* VisionKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VisionKit.framework; path = System/Library/Frameworks/VisionKit.framework; sourceTree = SDKROOT; };
-		21BDD3342C9F07F7000AA618 /* DeepLabV3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = DeepLabV3.mlmodel; sourceTree = "<group>"; };
+		21BDD3472CA25E6B000AA618 /* DeepLabV3.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = DeepLabV3.mlpackage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -49,7 +49,7 @@
 		21BDD2EC2C9D96C1000AA618 = {
 			isa = PBXGroup;
 			children = (
-				21BDD3342C9F07F7000AA618 /* DeepLabV3.mlmodel */,
+				21BDD3472CA25E6B000AA618 /* DeepLabV3.mlpackage */,
 				21BDD2F72C9D96C1000AA618 /* VisionTest */,
 				21BDD3192C9F01BD000AA618 /* Frameworks */,
 				21BDD2F62C9D96C1000AA618 /* Products */,
@@ -149,7 +149,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21BDD3352C9F07F7000AA618 /* DeepLabV3.mlmodel in Sources */,
+				21BDD3482CA25E6B000AA618 /* DeepLabV3.mlpackage in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
