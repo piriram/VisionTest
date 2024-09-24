@@ -17,7 +17,7 @@ struct RemoveBackgroundView: View {
                         Text("원본")
                             .font(.headline)
                         
-                        Image(uiImage: inputImage)// 이미지피커에서 선택한 사진
+                        Image(uiImage: inputImage) // 이미지피커에서 선택한 사진
                             .resizable()
                             .scaledToFit()
                             .frame(maxHeight: 300)
@@ -83,7 +83,8 @@ struct RemoveBackgroundView: View {
         processedImage = nil  // Reset processed image
         print("Starting background removal process...")
         
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInitiated).async { // userInitiated: 즉시결과를 요구하는 우선순위
+//            removeBG 함수 실행
             let result = self.removeBackground(from: inputImage)
             
             DispatchQueue.main.async {
@@ -105,11 +106,13 @@ struct RemoveBackgroundView: View {
             return nil
         }
         
+        print("CIImage created successfully with extent: \(ciImage.extent)")
+        
         let request = VNGeneratePersonSegmentationRequest()
-        request.qualityLevel = .balanced
+        request.qualityLevel = .accurate
         request.outputPixelFormat = kCVPixelFormatType_OneComponent8
         
-        #if targetEnvironment(simulator)
+#if targetEnvironment(simulator)
         if #available(iOS 17.0, *) {
             let allDevices = MLComputeDevice.allComputeDevices
             for device in allDevices where device.description.contains("MLCPUComputeDevice") {
@@ -121,17 +124,18 @@ struct RemoveBackgroundView: View {
             request.usesCPUOnly = true
             print("Using CPU for segmentation")
         }
-        #endif
+#endif
         
         let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
         
         do {
             print("Performing segmentation request...")
+            // Process request
             try handler.perform([request])
             print("Segmentation request completed")
             
             if let mask = request.results?.first?.pixelBuffer {
-                print("Mask generated successfully")
+                print("Mask generated successfully with size: \(CVPixelBufferGetWidth(mask))x\(CVPixelBufferGetHeight(mask))")
                 let maskedImage = applyMask(to: ciImage, mask: mask)
                 
                 let context = CIContext()
@@ -139,6 +143,7 @@ struct RemoveBackgroundView: View {
                     print("Failed to create CGImage from masked image")
                     return nil
                 }
+                print("CGImage created successfully")
                 return UIImage(cgImage: cgImage)
             } else {
                 print("No mask generated")
@@ -149,21 +154,25 @@ struct RemoveBackgroundView: View {
         
         return nil
     }
-   
+    
     func applyMask(to image: CIImage, mask: CVPixelBuffer) -> CIImage {
         let maskCIImage = CIImage(cvPixelBuffer: mask)
         
+        print("Original Mask Extent: \(maskCIImage.extent)")
+        print("Original Image Extent: \(image.extent)")
+        
+        // 마스크를 원본 크기로 조정
         let scale = max(image.extent.width / maskCIImage.extent.width,
                         image.extent.height / maskCIImage.extent.height)
         let resizedMask = maskCIImage.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
+        
+        print("Resized Mask Extent: \(resizedMask.extent)")
         
         let maskedImage = image.applyingFilter("CIBlendWithMask", parameters: [
             kCIInputMaskImageKey: resizedMask
         ])
         
         print("Masked image generated successfully")
-        print("Original Image Extent: \(image.extent)")
-        print("Resized Mask Extent: \(resizedMask.extent)")
         print("Masked Image Extent: \(maskedImage.extent)")
         
         return maskedImage
