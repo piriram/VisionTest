@@ -33,7 +33,7 @@ struct MultiPersonSegmentationView: View {
             .padding()
         }
         .sheet(isPresented: $showImagePicker) {
-            ImagePicker(sourceType: .photoLibrary) { image in
+            MultiImagePicker(sourceType: .photoLibrary) { image in
                 self.selectedImage = image
                 if let selectedImage = selectedImage {
                     processImage(selectedImage)
@@ -129,7 +129,7 @@ struct MultiPersonSegmentationView: View {
 }
 
 // UIImagePickerController를 위한 UIViewControllerRepresentable
-struct ImagePicker: UIViewControllerRepresentable {
+struct MultiImagePicker: UIViewControllerRepresentable {
     var sourceType: UIImagePickerController.SourceType
     var completionHandler: (UIImage) -> Void
     
@@ -147,9 +147,9 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
     
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        var parent: ImagePicker
+        var parent: MultiImagePicker
         
-        init(_ parent: ImagePicker) {
+        init(_ parent: MultiImagePicker) {
             self.parent = parent
         }
         
